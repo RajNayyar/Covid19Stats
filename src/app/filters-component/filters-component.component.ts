@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CovidDataServiceService } from '../covid-data-service.service';
 import { promise } from 'protractor';
-import {map,share} from 'rxjs/operators'
+import {map,share, startWith} from 'rxjs/operators'
 import { Observable } from 'rxjs'
-import {Countries, Country} from '../covidData.Model'
+import {Countries, CovidAffectedCountry} from '../covidData.Model'
 import {FormControl} from '@angular/forms';
 @Component({
   selector: 'filters-component',
@@ -12,15 +12,19 @@ import {FormControl} from '@angular/forms';
 })
 export class FiltersComponentComponent implements OnInit {
 
-  covidAffectedCountries: Country[]
-  countryArray: String[] = []
-  covidData: Observable<{(key: string):Country[]}>
+  covidAffectedCountries: CovidAffectedCountry[]
+  countryArray: string[]
+  covidData: Observable<{(key: string):CovidAffectedCountry[]}>
+  countriesObservable: Observable<string[]>
+
   constructor(private covidService: CovidDataServiceService,) { 
+
     this.covidData= this.covidService.FetchCovidData()
-    this.covidData
+
+    var countryData:Observable<CovidAffectedCountry[]> =  this.covidData
     .pipe(
-      map((results: {(key: string):Country[]})=> {
-      var Countries: Country[] = []
+      map((results: {(key: string):CovidAffectedCountry[]})=> {
+      var Countries: CovidAffectedCountry[] = []
       for(const key in results)
       {
         if(results.hasOwnProperty(key)){
@@ -28,16 +32,39 @@ export class FiltersComponentComponent implements OnInit {
         }
         break
       }
-      debugger
       return Countries
-  }))
-  .subscribe(data =>{
+  }),share())
+  
+  countryData
+  .subscribe((data: CovidAffectedCountry[]) =>{
      this.covidAffectedCountries = data
     })
-    
+     this.countriesObservable = countryData.pipe(
+      map((results: CovidAffectedCountry[]) =>{
+        for(var i=0; i<this.covidAffectedCountries.length;i++)
+         {
+          this.countryArray.push(this.covidAffectedCountries[i].Country)
+         }
+         return this.countryArray
+      }
+    ),share())
   }
+
+  myControl = new FormControl()
   ngOnInit() {
-    
+    this.countriesObservable = this.myControl.valueChanges.pipe(
+      startWith(''),
+      map((value) => this._filter(value))
+    )
+  }
+  private _filter(value: string):string[]{
+    const filterValue = value.toLowerCase()
+    return  this.countryArray.filter(country  => 
+      country.toLowerCase().includes(filterValue)) 
+  }
+  displayFn(subject){
+    return subject.Country
   }
 
 }
+

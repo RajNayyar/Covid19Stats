@@ -1,14 +1,14 @@
-export interface Country {
+export interface CovidAffectedCountry {
     data: any;
-    Country: String,
-    Slug: String,
-    NewConfirmed: Int16Array,
-    TotalConfirmed: Int16Array,
-    NewDeaths: Int16Array,
-    TotalDeaths: Int16Array,
-    NewRecovered: Int16Array,
-    TotalRecovered: Int16Array
+    Country: string,
+    Slug: string,
+    NewConfirmed: number,
+    TotalConfirmed: number,
+    NewDeaths: number,
+    TotalDeaths: number,
+    NewRecovered: number,
+    TotalRecovered: number
 }
 export interface Countries {
-    Countries: Country[] 
+    Countries: CovidAffectedCountry[] 
 }

@@ -3,7 +3,7 @@ import { CovidDataServiceService } from '../covid-data-service.service';
 import { promise } from 'protractor';
 import {map,share} from 'rxjs/operators'
 import { Observable } from 'rxjs'
-import {Countries, Country} from '../covidData.Model'
+import {Countries, CovidAffectedCountry} from '../covidData.Model'
 import {FormControl} from '@angular/forms';
 @Component({
   selector: 'stats-component',
@@ -12,15 +12,17 @@ import {FormControl} from '@angular/forms';
 })
 export class StatsComponentComponent implements OnInit {
 
-  covidAffectedCountries: Country[]
+  covidAffectedCountries: CovidAffectedCountry[]
   countryArray: String[] = []
-  covidData: Observable<{(key: string):Country[]}>
+  covidData: Observable<{(key: string):CovidAffectedCountry[]}>
+
   constructor(private covidService: CovidDataServiceService,) { 
     this.covidData= this.covidService.FetchCovidData()
+
     this.covidData
     .pipe(
-      map((results: {(key: string):Country[]})=> {
-      var Countries: Country[] = []
+      map((results: {(key: string):CovidAffectedCountry[]})=> {
+      var Countries: CovidAffectedCountry[] = []
       for(const key in results)
       {
         if(results.hasOwnProperty(key)){
@@ -28,14 +30,13 @@ export class StatsComponentComponent implements OnInit {
         }
         break
       }
-      debugger
       return Countries
   }))
   .subscribe(data =>{
      this.covidAffectedCountries = data
-    })
-    
+    }) 
   }
+  
   ngOnInit() {
     
   }

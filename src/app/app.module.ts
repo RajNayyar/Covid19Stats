@@ -5,21 +5,23 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
+import {FiltersComponentComponent} from './filters-component/filters-component.component'
 import { StatsComponentComponent } from './stats-component/stats-component.component';
 import { HttpClientModule }    from '@angular/common/http';
-import {Country, Countries} from './covidData.Model'
-import {MatInputModule,MatAutocompleteModule,MatToolbar,MatSelectModule, MatFormFieldModule} from '@angular/material'
+import {CovidAffectedCountry, Countries} from './covidData.Model'
+import {MatInputModule,MatAutocompleteModule,MatToolbar,MatSelectModule, MatFormFieldModule, MatTabsModule} from '@angular/material'
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import { FiltersComponentComponent } from './filters-component/filters-component.component';
+import { GlobalStatsComponent } from './global-stats/global-stats.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     FooterComponent,
+    FiltersComponentComponent,
     StatsComponentComponent,
     MatToolbar,
-    FiltersComponentComponent
+    GlobalStatsComponent
   ],
   imports: [
     BrowserModule,
@@ -28,11 +30,11 @@ import { FiltersComponentComponent } from './filters-component/filters-component
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-
     MatInputModule,
     MatAutocompleteModule,
     MatSelectModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatTabsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
